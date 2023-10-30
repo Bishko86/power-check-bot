@@ -1,16 +1,23 @@
 {
+  "author": "Roman Bishko",
   "name": "power-check-bot",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "license": "ISC",
+  "keywords": [
+    "electricity",
+    "bot",
+    "power-check"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start:dev": "npx nodemon",
     "build": "rimraf ./build && tsc"
   },
-  "keywords": ["electricity", "bot", "power-check"],
-  "author": "Roman Bishko",
-  "license": "ISC",
+  "dependencies": {
+    "viber-bot": "^1.0.18"
+  },
   "devDependencies": {
     "@types/node": "^20.8.9",
     "nodemon": "^3.0.1",
