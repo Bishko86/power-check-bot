@@ -3,7 +3,7 @@
   "name": "power-check-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/index.js",
   "license": "ISC",
   "keywords": [
     "electricity",
@@ -11,11 +11,11 @@
     "power-check"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "npx nodemon",
+    "dev": "npx nodemon",
     "build": "rimraf ./build && tsc"
   },
   "dependencies": {
+    "dotenv": "^16.3.1",
     "viber-bot": "^1.0.18"
   },
   "devDependencies": {
