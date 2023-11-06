@@ -1,4 +1,4 @@
-
+///<reference path = '../models/viber-bot.model.d.ts' />
 import { Message, ViberResponse } from 'viber-bot';
 
 import { SAMPLE_RICH_MEDIA, SAMPLE_RICH_MEDIA_2 } from '../constants';

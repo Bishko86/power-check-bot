@@ -1,3 +1,4 @@
+///<reference path = '../models/viber-bot.model.d.ts' />
 import { TextMessage, ViberResponse } from 'viber-bot';
 
 import viberBotService, { ViberBotService } from './viber-bot.service'

@@ -10,9 +10,9 @@ export class ViberBot {
         const port = process.env.PORT ?? 3000;
         http.createServer(bot.middleware()).listen(port, () => {
           bot.setWebhook((publicUrl as string))
-            .catch((error) => {
+            .catch((error: unknown) => {
               console.error('Can not set webhook on following server. Is it running?', error);
-              process.exit(1);
+              process.exit(1);  
             });
         });
       }).catch((err) => {
