@@ -5,7 +5,7 @@ import './schema/consumer.schema';
 import './schema/user.schema';
 
 export class MongoDB {
-  static async startConnection(): Promise<void> {
-    const collection = await db;
+  static startConnection(): void {
+    const collection = db;
   }
 }

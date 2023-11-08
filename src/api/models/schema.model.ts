@@ -2,17 +2,19 @@ import { Db } from 'mongodb';
 import { UserRole } from '../../enums';
 
 export interface Schema {
-  addSchema(db: Promise<Db>): void;
+  addSchema(): Promise<void>;
 }
 
 export interface User {
   userId: string;
+  name: string;
   consumerId: string;
   role: UserRole;
 }
 
 export interface Consumer {
   houseNumber: number;
+  hasNightTariff: boolean;
   users?: User[];
   data?: DataIndicators[];
 }
@@ -23,15 +25,16 @@ export interface DataIndicators {
 }
 
 export interface MonthlyData {
-  counterData: number,
-  consumedKW: number
+  dayData: number;
+  nightData: number,
 }
 
 export interface GeneralCounter {
   data: DataIndicators[];
-  primaryPrice: number;
-  actualPrice: number;
-  consumedKW: number;
-  submittedKW:number;
-  residualBalance: number;
+  dayPrice: number;
+  nightPrice: number;
+  actualDayPrice: number;
+  actualNightPrice: number;
+  consumedDayKW: number;
+  consumedNightKW: number;
 }

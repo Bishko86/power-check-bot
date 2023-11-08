@@ -5,6 +5,7 @@ declare module 'viber-bot' {
     onTextMessage(regExp: RegExp, callback: Function): this;
     middleware(): RequestListener<typeof IncomingMessage, typeof ServerResponse> | undefined;
     setWebhook(url: string): Promise<unknown>;
+    sendMessage(userProfile: UserProfile, message: Message.Text): Promise<void>;
   }
 
   export class UserProfile { //TODO clarify correct type
@@ -113,6 +114,6 @@ declare module 'viber-bot' {
     silent: boolean;
     replyType?: unknown;
     chatId?: number | string;
-    send: <T>(T) => Promise<unknown>;
+    send: <T, M>(T, M?) => Promise<unknown>;
   }
 }
