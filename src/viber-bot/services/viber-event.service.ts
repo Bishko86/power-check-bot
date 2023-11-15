@@ -1,3 +1,4 @@
+///<reference path = '../models/viber-bot.model.d.ts' />
 import { Bot, Events, TextMessage, ViberResponse } from 'viber-bot';
 
 import { MessageService } from './message.service';
@@ -19,17 +20,29 @@ class ViberEventService {
     this.watchForSubscribeEvent();
     this.watchForReceivedMessageEvent();
     this.watchForTextMessage();
+    this.viberBotInstance.on(Events.CONVERSATION_STARTED, (response: ViberResponse) => {
+      //TODO remove console
+      console.error(Events.CONVERSATION_STARTED, response);
+      
+    });
   }
 
   private watchForSubscribeEvent(): void {
     this.viberBotInstance.on(Events.SUBSCRIBED, (response: ViberResponse) => {
+      //TODO remove console
+      console.error(Events.SUBSCRIBED, response);
+      
       this.messageService.handleSubscribeEvent(response);
     });
   }
 
   private watchForReceivedMessageEvent(): void {
     this.viberBotInstance.on(Events.MESSAGE_RECEIVED, (message: TextMessage, response: ViberResponse) => {
-      this.messageService.handleMessageEvent(message, response);
+      // console.error(Events.MESSAGE_RECEIVED, response);
+      // console.error('message', message);
+      
+      
+      this.messageService.handleMessageEvent(message, response, this.viberBotInstance);
     });
   }
 

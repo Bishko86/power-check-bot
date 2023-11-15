@@ -12,10 +12,12 @@
   ],
   "scripts": {
     "dev": "npx nodemon",
+    "ngrok": "npx ts-node ./src/ngrok-proxy/ngrok-proxy.ts",
     "build": "rimraf ./build && tsc"
   },
   "dependencies": {
     "dotenv": "^16.3.1",
+    "mongodb": "^6.2.0",
     "viber-bot": "^1.0.18"
   },
   "devDependencies": {
