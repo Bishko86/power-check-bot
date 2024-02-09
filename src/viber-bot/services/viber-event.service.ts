@@ -1,15 +1,18 @@
 ///<reference path = '../models/viber-bot.model.d.ts' />
+import db from "../../api/services/database.service";
 import { Bot, Events, TextMessage, ViberResponse } from 'viber-bot';
 
-import { MessageService } from './message.service';
-import { GreetRegex, OpenMenuRegex } from '../constants';
-import messageService from './message.service';
+import messageService, { MessageService } from './message.service';
+import { ViberBotHelper } from '../helpers/bot.helper';
+import { UserService } from '../../api/services/user.service';
+import { ConsumersService } from '../../api/services/consumers.service';
 
 class ViberEventService {
   constructor(
     private viberBotInstance: Bot,
     private messageService: MessageService,
-  ) {}
+    private userService: UserService
+  ) { }
 
   start(): Bot {
     this.listenBotEvents();
@@ -19,48 +22,35 @@ class ViberEventService {
   private listenBotEvents(): void {
     this.watchForSubscribeEvent();
     this.watchForReceivedMessageEvent();
-    this.watchForTextMessage();
+
     this.viberBotInstance.on(Events.CONVERSATION_STARTED, (response: ViberResponse) => {
-      //TODO remove console
       console.error(Events.CONVERSATION_STARTED, response);
-      
     });
   }
 
   private watchForSubscribeEvent(): void {
     this.viberBotInstance.on(Events.SUBSCRIBED, (response: ViberResponse) => {
-      //TODO remove console
-      console.error(Events.SUBSCRIBED, response);
-      
       this.messageService.handleSubscribeEvent(response);
     });
   }
 
   private watchForReceivedMessageEvent(): void {
     this.viberBotInstance.on(Events.MESSAGE_RECEIVED, (message: TextMessage, response: ViberResponse) => {
-      // console.error(Events.MESSAGE_RECEIVED, response);
-      // console.error('message', message);
+      const userId = response.userProfile.id;
       
-      
-      this.messageService.handleMessageEvent(message, response, this.viberBotInstance);
-    });
-  }
+      const text = parseFloat(message.text);
+      const userText = isNaN(text) ? message.text : text;
 
-  private watchForTextMessage(): void {
-    this.viberBotInstance.onTextMessage(GreetRegex, (message: TextMessage, response: ViberResponse) => {
-      this.messageService.handleTextMessage(message, response);
-    });
-
-    this.viberBotInstance.onTextMessage(OpenMenuRegex, (message: TextMessage, response: ViberResponse) => {
-      this.messageService.handleTextMessage(message, response);
-    });
+      if (typeof userText === 'number') {
+        this.userService.submitCounterData(userId, userText);
+      } else {
+        this.messageService.handleTextMessage(message, response);
+      }
+    }); 
   }
 }
 
-const bot = new Bot({
-  authToken: process.env.BOT_ACCOUNT_TOKEN,
-  name: process.env.BOT_NAME,
-  avatar: process.env.AVATAR_URL
-});
 
-export default new ViberEventService(bot, messageService).start();
+const consumerService = new ConsumersService(db);
+const userService = new UserService(db, consumerService);
+export default new ViberEventService(ViberBotHelper.getBot(), messageService, userService);

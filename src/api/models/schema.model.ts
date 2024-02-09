@@ -20,13 +20,9 @@ export interface Consumer {
 }
 
 export interface DataIndicators {
-  year: number,
-  monthlyData: MonthlyData[],
-}
-
-export interface MonthlyData {
-  dayData: number;
-  nightData: number,
+  date: string;
+  dayCounterData: number;
+  nightCounterData: number,
 }
 
 export interface GeneralCounter {
