@@ -4,11 +4,14 @@ import { Bot, TextMessage, ViberResponse } from 'viber-bot';
 import viberBotService, { ViberBotService } from './viber-bot.service'
 import db from '../../api/services/database.service';
 
-import { GreetRegex, OpenMenuRegex } from '../constants';
 import { UserService } from '../../api/services/user.service';
 import { User } from '../../api/models';
 import { UserRole } from '../../enums';
 import { ConsumersService } from '../../api/services/consumers.service';
+import { MenuType } from '../enums/menu-type.enum';
+import { ViberBotHelper } from '../helpers/bot.helper';
+import Catch from '../../utils/catch-decorator.util';
+import { Response } from '../views/response.view';
 
 export class MessageService {
   constructor(
@@ -33,22 +36,23 @@ export class MessageService {
       
       this.userService.saveUser(user);
     }
-
-    if (message.text === 'Q') {
-      this.consumersService.getConsumerById();
-    }
   }
-
+@Catch
   handleTextMessage(message: TextMessage, response: ViberResponse): void {
-    if (GreetRegex.test(message.text)) {
-      this.viberBotService.initialMenuTemplate(response);
-    }
+    const menu = (Object.values(MenuType) as string[]).includes(message.text);
+    const bot = ViberBotHelper.getBot();
+    const user = response.userProfile;
 
-    if (OpenMenuRegex.test(message.text)) {
-      this.viberBotService.secondaryMenuTemplate(response)
-    }
+    const menuType = menu ? message.text as MenuType : MenuType.START_MENU;
+
+    const responseBody = Response.getResponse(menuType)
+    console.error(responseBody);
+    
+    bot.sendMessage(user, responseBody);
   }
 }
-const userService = new UserService(db);
+
 const consumersService = new ConsumersService(db);
+const userService = new UserService(db, consumersService);
+
 export default new MessageService(viberBotService, userService, consumersService);

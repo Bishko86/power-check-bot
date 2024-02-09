@@ -5,7 +5,7 @@ import { Schema } from '../models';
 import { CollectionsModel } from '../../enums';
 
 class ConsumerSchema implements Schema {
-  constructor(private db: Promise<Db>) {}
+  constructor(private db: Promise<Db>) { }
 
   async addSchema(): Promise<void> {
     const mongoDb = await this.db;
@@ -15,26 +15,12 @@ class ConsumerSchema implements Schema {
       validator: {
         $jsonSchema: {
           bsonType: ['object'],
-          required: ['users', 'houseNumber', 'data'],
+          required: ['hasNightTariff', 'houseNumber', 'data'],
           description: '"consumers" collection represent the consumer data',
           properties: {
-            users: {
-              bsonType: ['array'],
-              description: '"users" is required and is an array',
-              items: {
-                bsonType: ['object'],
-                required: ['username', 'userId'],
-                properties: {
-                  username: {
-                    bsonType: 'string',
-                    description: 'Username is required and must be a string',
-                  },
-                  userId: {
-                    bsonType: 'string',
-                    description: 'UserID is required and must be a string',
-                  },
-                },
-              },
+            hasNightTariff: {
+              bsonType: 'bool',
+              description: 'is required, and represent the number of consumer',
             },
             houseNumber: {
               bsonType: 'number',
@@ -42,29 +28,7 @@ class ConsumerSchema implements Schema {
             },
             data: {
               bsonType: ['array'],
-              required: ['year', 'monthlyData'],
-              properties: {
-                year: {
-                  bsonType: 'number',
-                  description: 'is required and represent the year of data',
-                },
-                monthlyData: {
-                  bsonType: ['array'],
-                  required: ['dayData', 'nightData'],
-                  properties: {
-                    dayData: {
-                      bsonType: 'number',
-                      description:
-                        'is required, point on the number of consumed electricity by the DAY tariff',
-                    },
-                    nightData: {
-                      bsonType: 'number',
-                      description:
-                        'is not required, point on the number of consumed electricity by the NIGHT tariff',
-                    },
-                  },
-                },
-              },
+              items: {}
             },
           },
         },
